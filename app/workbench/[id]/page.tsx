@@ -16,60 +16,101 @@ import {
   Clock,
   Circle,
   Upload,
-  Send
+  Send,
+  Paperclip,
+  ImageIcon,
+  X
 } from 'lucide-react'
 import Link from 'next/link'
+
+// Labels - extracted to avoid hydration mismatch
+const LABELS = {
+  markException: '\u6807\u8BB0\u5F02\u5E38',
+  saveNotes: '\u4FDD\u5B58\u5907\u6CE8',
+  completeCase: '\u5B8C\u6210\u7ED3\u6848',
+  currentNode: '\u5F53\u524D\u8282\u70B9:',
+  originalMaterials: '\u529E\u4EF6\u539F\u59CB\u6750\u6599',
+  fromP6: '\u6765\u81EA P6 \u7CFB\u7EDF',
+  approved: '\u5DF2\u901A\u8FC7',
+  pendingSupply: '\u5F85\u8865\u4EF6',
+  deliveryMilestones: '\u4EA4\u4ED8\u91CC\u7A0B\u7891\u6267\u884C',
+  completed: '\u5DF2\u5B8C\u6210',
+  inProgress: '\u8FDB\u884C\u4E2D',
+  pending: '\u5F85\u5904\u7406',
+  completedAt: '\u5B8C\u6210\u4E8E',
+  stageEvidence: '\u9636\u6BB5\u6027\u51ED\u8BC1',
+  uploadEvidence: '\u4E0A\u4F20\u9636\u6BB5\u6027\u51ED\u8BC1',
+  waitingPrevious: '\u7B49\u5F85\u4E0A\u4E00\u8282\u70B9\u5B8C\u6210',
+  markComplete: '\u6807\u8BB0\u5B8C\u6210',
+  finalUpload: '\u6700\u7EC8\u51ED\u8BC1\u4E0A\u4F20',
+  dragOrClick: '\u62D6\u62FD\u6216\u70B9\u51FB\u4E0A\u4F20\u6700\u7EC8\u4EA4\u4ED8\u6587\u4EF6',
+  maxSize: '\u6700\u5927',
+  interactionLog: '\u4EA4\u4ED8\u4E92\u52A8\u8BB0\u5F55',
+  deliveryNotes: '\u4EA4\u4ED8\u5907\u6CE8',
+  autoSave: '\u81EA\u52A8\u4FDD\u5B58',
+  inputMessage: '\u8F93\u5165\u6D88\u606F...',
+  addNotes: '\u6DFB\u52A0\u64CD\u4F5C\u8BB0\u5F55\u5907\u6CE8...',
+  addDeliveryNotes: '\u6DFB\u52A0\u4EA4\u4ED8\u5907\u6CE8...',
+}
 
 // Mock data
 const caseData = {
   id: 'OPP-260315-0001',
-  customerName: '张三科技有限公司',
+  customerName: '\u5F20\u4E09\u79D1\u6280\u6709\u9650\u516C\u53F8',
   currentStep: 2,
   totalSteps: 3,
-  currentStepName: '政府审核',
+  currentStepName: '\u653F\u5E9C\u5BA1\u6838',
 }
 
 const materials = [
-  { id: 1, name: '护照扫描件.pdf', status: 'approved' as const },
-  { id: 2, name: '公司章程.pdf', status: 'approved' as const },
-  { id: 3, name: '申请表格.pdf', status: 'pending' as const },
-  { id: 4, name: '营业执照副本.pdf', status: 'approved' as const },
-  { id: 5, name: '法人身份证.pdf', status: 'pending' as const },
+  { id: 1, name: '\u62A4\u7167\u626B\u63CF\u4EF6.pdf', status: 'approved' as const },
+  { id: 2, name: '\u516C\u53F8\u7AE0\u7A0B.pdf', status: 'approved' as const },
+  { id: 3, name: '\u7533\u8BF7\u8868\u683C.pdf', status: 'pending' as const },
+  { id: 4, name: '\u8425\u4E1A\u6267\u7167\u526F\u672C.pdf', status: 'approved' as const },
+  { id: 5, name: '\u6CD5\u4EBA\u8EAB\u4EFD\u8BC1.pdf', status: 'pending' as const },
 ]
 
 const milestones = [
   { 
     id: 1, 
-    name: '提交申请', 
+    name: '\u63D0\u4EA4\u7533\u8BF7', 
     status: 'completed' as const, 
     completedAt: '2024-03-21 14:00',
-    note: '已提交至政府系统'
+    note: '\u5DF2\u63D0\u4EA4\u81F3\u653F\u5E9C\u7CFB\u7EDF',
+    attachments: [
+      { id: 'a1', name: '\u63D0\u4EA4\u56DE\u6267\u622A\u56FE.png', type: 'image' as const },
+      { id: 'a2', name: '\u7CFB\u7EDF\u786E\u8BA4\u5355.pdf', type: 'file' as const },
+    ]
   },
   { 
     id: 2, 
-    name: '政府审核', 
+    name: '\u653F\u5E9C\u5BA1\u6838', 
     status: 'in_progress' as const, 
     completedAt: null,
-    note: ''
+    note: '',
+    attachments: []
   },
   { 
     id: 3, 
-    name: '结果下发', 
+    name: '\u7ED3\u679C\u4E0B\u53D1', 
     status: 'pending' as const, 
     completedAt: null,
-    note: ''
+    note: '',
+    attachments: []
   },
 ]
 
 const chatHistory = [
-  { id: 1, sender: '销售-李明', message: '客户催促进度，请尽快处理', time: '03-20 09:30', isMe: false },
-  { id: 2, sender: '交付-王芳', message: '已提交，预计3个工作日出结果', time: '03-20 10:15', isMe: true },
-  { id: 3, sender: '销售-李明', message: '收到，已告知客户', time: '03-20 10:20', isMe: false },
+  { id: 1, sender: '\u9500\u552E-\u674E\u660E', message: '\u5BA2\u6237\u50AC\u4FC3\u8FDB\u5EA6\uFF0C\u8BF7\u5C3D\u5FEB\u5904\u7406', time: '03-20 09:30', isMe: false },
+  { id: 2, sender: '\u4EA4\u4ED8-\u738B\u82B3', message: '\u5DF2\u63D0\u4EA4\uFF0C\u9884\u8BA13\u4E2A\u5DE5\u4F5C\u65E5\u51FA\u7ED3\u679C', time: '03-20 10:15', isMe: true },
+  { id: 3, sender: '\u9500\u552E-\u674E\u660E', message: '\u6536\u5230\uFF0C\u5DF2\u544A\u77E5\u5BA2\u6237', time: '03-20 10:20', isMe: false },
 ]
+
+const DEFAULT_DELIVERY_NOTE = '\u5BA2\u6237\u914D\u5408\u5EA6\u9AD8\uFF0C\u6750\u6599\u9F50\u5168\u3002'
 
 export default function WorkbenchDetailPage() {
   const [currentNote, setCurrentNote] = useState('')
-  const [deliveryNote, setDeliveryNote] = useState('客户配合度高，材料齐全。')
+  const [deliveryNote, setDeliveryNote] = useState(DEFAULT_DELIVERY_NOTE)
   const [newMessage, setNewMessage] = useState('')
 
   return (
@@ -93,7 +134,7 @@ export default function WorkbenchDetailPage() {
 
           <div className="flex-1 flex items-center justify-center">
             <div className="flex items-center gap-2 bg-[#f9fafb] border border-[#e5e7eb] rounded-sm px-3 py-1">
-              <span className="text-[11px] text-[#6b7280]">当前节点:</span>
+              <span className="text-[11px] text-[#6b7280]">{LABELS.currentNode}</span>
               <span className="text-[12px] text-[#374151] font-medium">{caseData.currentStepName}</span>
               <div className="w-24 h-1.5 bg-[#e5e7eb] rounded-full overflow-hidden">
                 <div 
@@ -112,7 +153,7 @@ export default function WorkbenchDetailPage() {
               className="h-8 px-3 text-[12px] rounded-sm border-[#e5e7eb] text-[#dc2626] hover:bg-red-50 hover:border-[#dc2626]"
             >
               <TriangleAlert className="h-3.5 w-3.5 mr-1.5" />
-              {"标记异常"}
+              {LABELS.markException}
             </Button>
             <Button 
               variant="outline" 
@@ -120,14 +161,14 @@ export default function WorkbenchDetailPage() {
               className="h-8 px-3 text-[12px] rounded-sm border-[#e5e7eb]"
             >
               <Save className="h-3.5 w-3.5 mr-1.5" />
-              {"保存备注"}
+              {LABELS.saveNotes}
             </Button>
             <Button 
               size="sm" 
               className="h-8 px-3 text-[12px] rounded-sm bg-[#2563eb] hover:bg-[#1d4ed8]"
             >
               <CheckCircle2 className="h-3.5 w-3.5 mr-1.5" />
-              {"完成结案"}
+              {LABELS.completeCase}
             </Button>
           </div>
         </header>
@@ -135,8 +176,8 @@ export default function WorkbenchDetailPage() {
         <div className="flex flex-1 overflow-hidden">
           <div className="w-[300px] flex-shrink-0 border-r border-[#e5e7eb] bg-white flex flex-col overflow-hidden">
             <div className="px-3 py-2.5 border-b border-[#e5e7eb]">
-              <h3 className="text-[13px] font-medium text-[#374151]">{"办件原始材料"}</h3>
-              <p className="text-[11px] text-[#9ca3af] mt-0.5">{"来自 P6 系统"}</p>
+              <h3 className="text-[13px] font-medium text-[#374151]">{LABELS.originalMaterials}</h3>
+              <p className="text-[11px] text-[#9ca3af] mt-0.5">{LABELS.fromP6}</p>
             </div>
             <div className="flex-1 overflow-auto">
               <ul className="divide-y divide-[#e5e7eb]">
@@ -151,7 +192,7 @@ export default function WorkbenchDetailPage() {
                           : 'bg-[#fffbeb] text-[#b45309] border-[#fde68a]'
                       }`}
                     >
-                      {item.status === 'approved' ? '已通过' : '待补件'}
+                      {item.status === 'approved' ? LABELS.approved : LABELS.pendingSupply}
                     </span>
                     <div className="flex items-center gap-1">
                       <button className="p-1 hover:bg-[#e5e7eb] rounded-sm">
@@ -169,7 +210,7 @@ export default function WorkbenchDetailPage() {
 
           <div className="flex-1 bg-[#f9fafb] p-4 overflow-auto">
             <div className="mb-4">
-              <h3 className="text-[13px] font-medium text-[#374151]">{"交付里程碑执行"}</h3>
+              <h3 className="text-[13px] font-medium text-[#374151]">{LABELS.deliveryMilestones}</h3>
               <p className="text-[11px] text-[#9ca3af] mt-0.5">Progress Points</p>
             </div>
 
@@ -216,37 +257,92 @@ export default function WorkbenchDetailPage() {
                               : 'bg-[#f9fafb] text-[#6b7280] border-[#e5e7eb]'
                           }`}
                         >
-                          {milestone.status === 'completed' ? '已完成' : milestone.status === 'in_progress' ? '进行中' : '待处理'}
+                          {milestone.status === 'completed' ? LABELS.completed : milestone.status === 'in_progress' ? LABELS.inProgress : LABELS.pending}
                         </span>
                       </div>
                       {milestone.completedAt && (
-                        <p className="font-mono text-[11px] text-[#9ca3af] mt-1">{"完成于"} {milestone.completedAt}</p>
+                        <p className="font-mono text-[11px] text-[#9ca3af] mt-1">{LABELS.completedAt} {milestone.completedAt}</p>
                       )}
                     </div>
 
                     <div className="px-3 py-2.5">
-                      {milestone.status === 'completed' && milestone.note && (
-                        <p className="text-[12px] text-[#6b7280]">{milestone.note}</p>
+                      {milestone.status === 'completed' && (
+                        <div className="space-y-2">
+                          {milestone.note && (
+                            <p className="text-[12px] text-[#6b7280]">{milestone.note}</p>
+                          )}
+                          {milestone.attachments.length > 0 && (
+                            <div className="space-y-1">
+                              <p className="text-[10px] text-[#9ca3af]">{LABELS.stageEvidence}</p>
+                              <div className="flex flex-wrap gap-1.5">
+                                {milestone.attachments.map((att) => (
+                                  <div 
+                                    key={att.id} 
+                                    className="flex items-center gap-1 px-1.5 py-0.5 bg-[#f9fafb] border border-[#e5e7eb] rounded-sm text-[10px] text-[#6b7280] group"
+                                  >
+                                    {att.type === 'image' ? (
+                                      <ImageIcon className="h-3 w-3 text-[#9ca3af]" />
+                                    ) : (
+                                      <FileText className="h-3 w-3 text-[#9ca3af]" />
+                                    )}
+                                    <span className="max-w-[100px] truncate">{att.name}</span>
+                                    <button className="p-0.5 hover:bg-[#e5e7eb] rounded-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                                      <X className="h-2.5 w-2.5 text-[#9ca3af]" />
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          <button className="flex items-center gap-1 h-6 px-2 text-[10px] text-[#6b7280] border border-dashed border-[#d1d5db] rounded-sm hover:border-[#2563eb] hover:text-[#2563eb] hover:bg-[#eff6ff] transition-colors">
+                            <Paperclip className="h-3 w-3" />
+                            {LABELS.uploadEvidence}
+                          </button>
+                        </div>
                       )}
                       {milestone.status === 'in_progress' && (
                         <div className="space-y-2.5">
                           <Textarea 
-                            placeholder="添加操作记录备注..."
+                            placeholder={LABELS.addNotes}
                             value={currentNote}
                             onChange={(e) => setCurrentNote(e.target.value)}
                             className="min-h-[60px] text-[12px] border-[#e5e7eb] rounded-sm resize-none shadow-none focus-visible:ring-1 focus-visible:ring-[#2563eb]"
                           />
+                          {milestone.attachments.length > 0 && (
+                            <div className="flex flex-wrap gap-1.5">
+                              {milestone.attachments.map((att) => (
+                                <div 
+                                  key={att.id} 
+                                  className="flex items-center gap-1 px-1.5 py-0.5 bg-[#f9fafb] border border-[#e5e7eb] rounded-sm text-[10px] text-[#6b7280] group"
+                                >
+                                  {att.type === 'image' ? (
+                                    <ImageIcon className="h-3 w-3 text-[#9ca3af]" />
+                                  ) : (
+                                    <FileText className="h-3 w-3 text-[#9ca3af]" />
+                                  )}
+                                  <span className="max-w-[100px] truncate">{att.name}</span>
+                                  <button className="p-0.5 hover:bg-[#e5e7eb] rounded-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <X className="h-2.5 w-2.5 text-[#9ca3af]" />
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          <button className="flex items-center gap-1 h-6 px-2 text-[10px] text-[#6b7280] border border-dashed border-[#d1d5db] rounded-sm hover:border-[#2563eb] hover:text-[#2563eb] hover:bg-[#eff6ff] transition-colors w-full justify-center">
+                            <Paperclip className="h-3 w-3" />
+                            {LABELS.uploadEvidence}
+                          </button>
                           <Button 
                             size="sm" 
                             className="h-8 px-4 text-[12px] rounded-sm bg-[#2563eb] hover:bg-[#1d4ed8] w-full"
                           >
                             <Check className="h-3.5 w-3.5 mr-1.5" />
-                            {"标记完成"}
+                            {LABELS.markComplete}
                           </Button>
                         </div>
                       )}
                       {milestone.status === 'pending' && (
-                        <p className="text-[11px] text-[#9ca3af]">{"等待上一节点完成"}</p>
+                        <p className="text-[11px] text-[#9ca3af]">{LABELS.waitingPrevious}</p>
                       )}
                     </div>
                   </div>
@@ -257,19 +353,19 @@ export default function WorkbenchDetailPage() {
 
           <div className="w-[320px] flex-shrink-0 border-l border-[#e5e7eb] bg-white flex flex-col overflow-hidden">
             <div className="px-3 py-2.5 border-b border-[#e5e7eb]">
-              <h4 className="text-[12px] font-medium text-[#374151]">{"最终凭证上传"}</h4>
+              <h4 className="text-[12px] font-medium text-[#374151]">{LABELS.finalUpload}</h4>
             </div>
             <div className="px-3 py-3 border-b border-[#e5e7eb]">
               <div className="h-28 border-2 border-dashed border-[#d1d5db] rounded-sm flex flex-col items-center justify-center bg-[#f9fafb] hover:border-[#2563eb] hover:bg-[#eff6ff] cursor-pointer transition-colors">
                 <Upload className="h-6 w-6 text-[#9ca3af] mb-1.5" />
-                <p className="text-[11px] text-[#6b7280]">{"拖拽或点击上传最终交付文件"}</p>
-                <p className="text-[10px] text-[#9ca3af] mt-0.5">PDF, JPG, PNG ({"最大"} 10MB)</p>
+                <p className="text-[11px] text-[#6b7280]">{LABELS.dragOrClick}</p>
+                <p className="text-[10px] text-[#9ca3af] mt-0.5">PDF, JPG, PNG ({LABELS.maxSize} 10MB)</p>
               </div>
             </div>
 
             <div className="flex-1 flex flex-col min-h-0">
               <div className="px-3 py-2 border-b border-[#e5e7eb]">
-                <h4 className="text-[12px] font-medium text-[#374151]">{"交付互动记录"}</h4>
+                <h4 className="text-[12px] font-medium text-[#374151]">{LABELS.interactionLog}</h4>
               </div>
               <div className="flex-1 overflow-auto px-3 py-2 space-y-2">
                 {chatHistory.map((msg) => (
@@ -294,7 +390,7 @@ export default function WorkbenchDetailPage() {
                 <div className="flex gap-2">
                   <input 
                     type="text"
-                    placeholder="输入消息..."
+                    placeholder={LABELS.inputMessage}
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     className="flex-1 h-8 px-2.5 text-[12px] border border-[#e5e7eb] rounded-sm bg-white focus:outline-none focus:border-[#2563eb]"
@@ -308,14 +404,14 @@ export default function WorkbenchDetailPage() {
 
             <div className="border-t border-[#e5e7eb]">
               <div className="px-3 py-2 border-b border-[#e5e7eb]">
-                <h4 className="text-[12px] font-medium text-[#374151]">{"交付备注"}</h4>
-                <p className="text-[10px] text-[#9ca3af]">{"自动保存"}</p>
+                <h4 className="text-[12px] font-medium text-[#374151]">{LABELS.deliveryNotes}</h4>
+                <p className="text-[10px] text-[#9ca3af]">{LABELS.autoSave}</p>
               </div>
               <div className="px-3 py-2">
                 <Textarea 
                   value={deliveryNote}
                   onChange={(e) => setDeliveryNote(e.target.value)}
-                  placeholder="添加交付备注..."
+                  placeholder={LABELS.addDeliveryNotes}
                   className="min-h-[72px] text-[12px] border-[#e5e7eb] rounded-sm resize-none shadow-none focus-visible:ring-1 focus-visible:ring-[#2563eb]"
                 />
               </div>
