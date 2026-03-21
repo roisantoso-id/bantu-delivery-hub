@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
 import {
   Table,
@@ -118,7 +118,11 @@ const statusConfig = {
 }
 
 export default function TasksPage() {
-  const today = useMemo(() => new Date().toISOString().split('T')[0], [])
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // 统计数据
   const totalInProgress = myTasks.filter(t => t.status === 'active' || t.status === 'blocked').length
@@ -321,7 +325,7 @@ export default function TasksPage() {
                       <span className="text-[10px] text-[#dc2626] font-medium">卡点</span>
                     )}
                     <span className="text-[10px] text-[#9ca3af] ml-auto">
-                      {formatReminderTime(reminder.createdAt)}
+                      {mounted ? formatReminderTime(reminder.createdAt) : formatDateTime(reminder.createdAt)}
                     </span>
                   </div>
                 </div>
