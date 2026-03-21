@@ -96,7 +96,14 @@ const statusConfig = {
   blocked: { label: '已卡点', bg: 'bg-[#fee2e2]', text: 'text-[#dc2626]' },
 }
 
+'use client'
+
+import { useMemo } from 'react'
+
 export default function DashboardPage() {
+  // 在客户端计算当前日期以避免 hydration 不匹配
+  const today = useMemo(() => new Date().toISOString().split('T')[0], [])
+  
   return (
     <DashboardLayout 
       title="大盘概览" 
@@ -155,7 +162,7 @@ export default function DashboardPage() {
             <TableBody>
               {tasks.map((task) => {
                 const status = statusConfig[task.status]
-                const isOverdue = new Date(task.expectedDate) < new Date()
+                const isOverdue = task.expectedDate < today
                 
                 return (
                   <TableRow 
