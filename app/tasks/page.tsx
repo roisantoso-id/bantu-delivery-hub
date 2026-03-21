@@ -324,8 +324,8 @@ export default function TasksPage() {
                     {reminder.type === 'blocked' && (
                       <span className="text-[10px] text-[#dc2626] font-medium">卡点</span>
                     )}
-                    <span className="text-[10px] text-[#9ca3af] ml-auto">
-                      {mounted ? formatReminderTime(reminder.createdAt) : formatDateTime(reminder.createdAt)}
+                    <span className="text-[10px] text-[#9ca3af] ml-auto font-mono">
+                      {formatDateTime(reminder.createdAt)}
                     </span>
                   </div>
                 </div>

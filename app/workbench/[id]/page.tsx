@@ -136,20 +136,22 @@ export default function WorkbenchDetailPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5">
-            <Button variant="ghost" size="sm" className="h-7 px-2 text-[11px] rounded-sm text-[#b91c1c] hover:bg-[#fef2f2]">
-              <TriangleAlert className="h-3 w-3 mr-1" />
-              {mounted && <span>标记异常</span>}
-            </Button>
-            <Button variant="ghost" size="sm" className="h-7 px-2 text-[11px] rounded-sm text-[#6b7280] hover:bg-[#f3f4f6]">
-              <Save className="h-3 w-3 mr-1" />
-              {mounted && <span>保存备注</span>}
-            </Button>
-            <Button size="sm" className="h-7 px-2.5 text-[11px] rounded-sm bg-[#2563eb] hover:bg-[#1d4ed8]">
-              <CheckCircle2 className="h-3 w-3 mr-1" />
-              {mounted && <span>完成结案</span>}
-            </Button>
-          </div>
+          {mounted && (
+            <div className="flex items-center gap-1.5">
+              <Button variant="outline" size="sm" className="h-8 px-3 text-[11px] rounded-sm text-[#b91c1c] border-[#fecaca] hover:bg-[#fef2f2]">
+                <TriangleAlert className="h-3 w-3 mr-1" />
+                {"标记异常"}
+              </Button>
+              <Button variant="outline" size="sm" className="h-8 px-3 text-[11px] rounded-sm text-[#6b7280] border-[#e5e7eb] hover:bg-[#f3f4f6]">
+                <Save className="h-3 w-3 mr-1" />
+                {"保存备注"}
+              </Button>
+              <Button size="sm" className="h-8 px-3 text-[11px] rounded-sm bg-[#2563eb] hover:bg-[#1d4ed8]">
+                <CheckCircle2 className="h-3 w-3 mr-1" />
+                {"完成结案"}
+              </Button>
+            </div>
+          )}
         </header>
 
         {/* Main 3-column layout */}
