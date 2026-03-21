@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { 
   ArrowLeft, 
-  AlertTriangle, 
+  TriangleAlert, 
   Save, 
   CheckCircle2, 
   FileText, 
@@ -20,7 +20,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 
-// 模拟数据
+// Mock data
 const caseData = {
   id: 'OPP-260315-0001',
   customerName: '张三科技有限公司',
@@ -74,14 +74,10 @@ export default function WorkbenchDetailPage() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-white">
-      {/* 侧边栏 */}
       <Sidebar isSupervisor={false} />
 
-      {/* 主内容区 */}
       <div className="flex flex-1 flex-col min-w-0">
-        {/* 顶部状态导航 */}
         <header className="h-12 flex-shrink-0 border-b border-[#e5e7eb] bg-white flex items-center px-4 gap-4">
-          {/* 左侧：返回 + 商机编号 */}
           <div className="flex items-center gap-3">
             <Link href="/dashboard">
               <Button variant="ghost" size="sm" className="h-7 w-7 p-0 rounded-sm">
@@ -95,7 +91,6 @@ export default function WorkbenchDetailPage() {
             </div>
           </div>
 
-          {/* 中间：进度条 */}
           <div className="flex-1 flex items-center justify-center">
             <div className="flex items-center gap-2 bg-[#f9fafb] border border-[#e5e7eb] rounded-sm px-3 py-1">
               <span className="text-[11px] text-[#6b7280]">当前节点:</span>
@@ -110,15 +105,14 @@ export default function WorkbenchDetailPage() {
             </div>
           </div>
 
-          {/* 右侧：操作按钮 */}
           <div className="flex items-center gap-2">
             <Button 
               variant="outline" 
               size="sm" 
               className="h-8 px-3 text-[12px] rounded-sm border-[#e5e7eb] text-[#dc2626] hover:bg-red-50 hover:border-[#dc2626]"
             >
-              <AlertTriangle className="h-3.5 w-3.5 mr-1.5" />
-              标记异常
+              <TriangleAlert className="h-3.5 w-3.5 mr-1.5" />
+              {"标记异常"}
             </Button>
             <Button 
               variant="outline" 
@@ -126,25 +120,23 @@ export default function WorkbenchDetailPage() {
               className="h-8 px-3 text-[12px] rounded-sm border-[#e5e7eb]"
             >
               <Save className="h-3.5 w-3.5 mr-1.5" />
-              保存备注
+              {"保存备注"}
             </Button>
             <Button 
               size="sm" 
               className="h-8 px-3 text-[12px] rounded-sm bg-[#2563eb] hover:bg-[#1d4ed8]"
             >
               <CheckCircle2 className="h-3.5 w-3.5 mr-1.5" />
-              完成结案
+              {"完成结案"}
             </Button>
           </div>
         </header>
 
-        {/* 三栏式工作布局 */}
         <div className="flex flex-1 overflow-hidden">
-          {/* 左栏 - 资料审查区 */}
           <div className="w-[300px] flex-shrink-0 border-r border-[#e5e7eb] bg-white flex flex-col overflow-hidden">
             <div className="px-3 py-2.5 border-b border-[#e5e7eb]">
-              <h3 className="text-[13px] font-medium text-[#374151]">办件原始材料</h3>
-              <p className="text-[11px] text-[#9ca3af] mt-0.5">来自 P6 系统</p>
+              <h3 className="text-[13px] font-medium text-[#374151]">{"办件原始材料"}</h3>
+              <p className="text-[11px] text-[#9ca3af] mt-0.5">{"来自 P6 系统"}</p>
             </div>
             <div className="flex-1 overflow-auto">
               <ul className="divide-y divide-[#e5e7eb]">
@@ -175,18 +167,15 @@ export default function WorkbenchDetailPage() {
             </div>
           </div>
 
-          {/* 中栏 - 交付执行区 */}
           <div className="flex-1 bg-[#f9fafb] p-4 overflow-auto">
             <div className="mb-4">
-              <h3 className="text-[13px] font-medium text-[#374151]">交付里程碑执行</h3>
+              <h3 className="text-[13px] font-medium text-[#374151]">{"交付里程碑执行"}</h3>
               <p className="text-[11px] text-[#9ca3af] mt-0.5">Progress Points</p>
             </div>
 
-            {/* 垂直时间轴 */}
             <div className="relative">
               {milestones.map((milestone, index) => (
                 <div key={milestone.id} className="flex gap-4 pb-6 last:pb-0">
-                  {/* 时间轴线和节点 */}
                   <div className="flex flex-col items-center">
                     <div 
                       className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 border-2 ${
@@ -212,7 +201,6 @@ export default function WorkbenchDetailPage() {
                     )}
                   </div>
 
-                  {/* 节点内容卡片 */}
                   <div className={`flex-1 border rounded-sm bg-white ${
                     milestone.status === 'in_progress' ? 'border-[#2563eb]' : 'border-[#e5e7eb]'
                   }`}>
@@ -232,7 +220,7 @@ export default function WorkbenchDetailPage() {
                         </span>
                       </div>
                       {milestone.completedAt && (
-                        <p className="font-mono text-[11px] text-[#9ca3af] mt-1">完成于 {milestone.completedAt}</p>
+                        <p className="font-mono text-[11px] text-[#9ca3af] mt-1">{"完成于"} {milestone.completedAt}</p>
                       )}
                     </div>
 
@@ -253,12 +241,12 @@ export default function WorkbenchDetailPage() {
                             className="h-8 px-4 text-[12px] rounded-sm bg-[#2563eb] hover:bg-[#1d4ed8] w-full"
                           >
                             <Check className="h-3.5 w-3.5 mr-1.5" />
-                            标记完成
+                            {"标记完成"}
                           </Button>
                         </div>
                       )}
                       {milestone.status === 'pending' && (
-                        <p className="text-[11px] text-[#9ca3af]">等待上一节点完成</p>
+                        <p className="text-[11px] text-[#9ca3af]">{"等待上一节点完成"}</p>
                       )}
                     </div>
                   </div>
@@ -267,24 +255,21 @@ export default function WorkbenchDetailPage() {
             </div>
           </div>
 
-          {/* 右栏 - 最终产出与互动 */}
           <div className="w-[320px] flex-shrink-0 border-l border-[#e5e7eb] bg-white flex flex-col overflow-hidden">
-            {/* 区块1：最终凭证上传 */}
             <div className="px-3 py-2.5 border-b border-[#e5e7eb]">
-              <h4 className="text-[12px] font-medium text-[#374151]">最终凭证上传</h4>
+              <h4 className="text-[12px] font-medium text-[#374151]">{"最终凭证上传"}</h4>
             </div>
             <div className="px-3 py-3 border-b border-[#e5e7eb]">
               <div className="h-28 border-2 border-dashed border-[#d1d5db] rounded-sm flex flex-col items-center justify-center bg-[#f9fafb] hover:border-[#2563eb] hover:bg-[#eff6ff] cursor-pointer transition-colors">
                 <Upload className="h-6 w-6 text-[#9ca3af] mb-1.5" />
-                <p className="text-[11px] text-[#6b7280]">拖拽或点击上传最终交付文件</p>
-                <p className="text-[10px] text-[#9ca3af] mt-0.5">PDF, JPG, PNG (最大 10MB)</p>
+                <p className="text-[11px] text-[#6b7280]">{"拖拽或点击上传最终交付文件"}</p>
+                <p className="text-[10px] text-[#9ca3af] mt-0.5">PDF, JPG, PNG ({"最大"} 10MB)</p>
               </div>
             </div>
 
-            {/* 区块2：交付互动记录 */}
             <div className="flex-1 flex flex-col min-h-0">
               <div className="px-3 py-2 border-b border-[#e5e7eb]">
-                <h4 className="text-[12px] font-medium text-[#374151]">交付互动记录</h4>
+                <h4 className="text-[12px] font-medium text-[#374151]">{"交付互动记录"}</h4>
               </div>
               <div className="flex-1 overflow-auto px-3 py-2 space-y-2">
                 {chatHistory.map((msg) => (
@@ -321,11 +306,10 @@ export default function WorkbenchDetailPage() {
               </div>
             </div>
 
-            {/* 区块3：交付备注 */}
             <div className="border-t border-[#e5e7eb]">
               <div className="px-3 py-2 border-b border-[#e5e7eb]">
-                <h4 className="text-[12px] font-medium text-[#374151]">交付备注</h4>
-                <p className="text-[10px] text-[#9ca3af]">自动保存</p>
+                <h4 className="text-[12px] font-medium text-[#374151]">{"交付备注"}</h4>
+                <p className="text-[10px] text-[#9ca3af]">{"自动保存"}</p>
               </div>
               <div className="px-3 py-2">
                 <Textarea 
