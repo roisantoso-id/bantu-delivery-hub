@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, ClipboardList, Users } from 'lucide-react'
+import { LayoutDashboard, ClipboardList, Users, GitBranch } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface NavItem {
@@ -25,6 +25,12 @@ const executorNavItems: NavItem[] = [
     shortLabel: '\u5DE5\u4F5C\u53F0',
     href: '/tasks',
     icon: <ClipboardList className="size-4" />,
+  },
+  {
+    label: 'Collab Workbench',
+    shortLabel: '\u534F\u540C',
+    href: '/workbench/collab/demo',
+    icon: <GitBranch className="size-4" />,
   },
 ]
 

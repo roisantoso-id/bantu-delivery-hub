@@ -140,17 +140,7 @@ export default function TasksPage() {
     return `${month}-${day} ${hours}:${minutes}`
   }
 
-  const formatReminderTime = (dateStr: string) => {
-    const date = new Date(dateStr)
-    const now = new Date()
-    const diffMs = now.getTime() - date.getTime()
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
-    
-    if (diffHours < 1) return '刚刚'
-    if (diffHours < 24) return `${diffHours}小时前`
-    const diffDays = Math.floor(diffHours / 24)
-    return `${diffDays}天前`
-  }
+
 
   return (
     <DashboardLayout title="我的办件" userName="张三" isSupervisor={false}>
