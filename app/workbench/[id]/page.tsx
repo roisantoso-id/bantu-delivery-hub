@@ -115,7 +115,7 @@ export default function WorkbenchDetailPage() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-white">
-      <Sidebar isSupervisor={false} />
+      <Sidebar />
 
       <div className="flex flex-1 flex-col min-w-0">
         <header className="h-12 flex-shrink-0 border-b border-[#e5e7eb] bg-white flex items-center px-4 gap-4">

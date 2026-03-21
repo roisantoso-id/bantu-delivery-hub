@@ -10,82 +10,99 @@ interface NavItem {
   shortLabel: string
   href: string
   icon: React.ReactNode
-  supervisorOnly?: boolean
 }
 
-const navItems: NavItem[] = [
+// Executor menu
+const executorNavItems: NavItem[] = [
   {
-    label: '大盘概览',
-    shortLabel: '概览',
+    label: 'Dashboard',
+    shortLabel: '\u6982\u89C8',
     href: '/dashboard',
     icon: <LayoutDashboard className="size-4" />,
   },
   {
-    label: '我的办件',
-    shortLabel: '工作台',
+    label: 'My Tasks',
+    shortLabel: '\u5DE5\u4F5C\u53F0',
     href: '/tasks',
     icon: <ClipboardList className="size-4" />,
   },
+]
+
+// Assigner menu
+const assignerNavItems: NavItem[] = [
   {
-    label: '资源调度',
-    shortLabel: '调度',
+    label: 'Dispatch',
+    shortLabel: '\u8C03\u5EA6',
     href: '/dispatch',
     icon: <Users className="size-4" />,
-    supervisorOnly: true,
   },
 ]
 
-interface SidebarProps {
-  isSupervisor?: boolean
+const SECTION_LABELS = {
+  executor: '\u6267\u884C',
+  assigner: '\u5206\u914D',
 }
 
-export function Sidebar({ isSupervisor = true }: SidebarProps) {
+export function Sidebar() {
   const pathname = usePathname()
 
-  const filteredNavItems = navItems.filter(
-    (item) => !item.supervisorOnly || isSupervisor
-  )
+  const renderNavItem = (item: NavItem) => {
+    const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
+    return (
+      <li key={item.href}>
+        <Link
+          href={item.href}
+          className={cn(
+            'flex flex-col items-center gap-0.5 px-1 py-2 rounded-sm text-center transition-colors',
+            isActive
+              ? 'bg-[#eff6ff] text-[#2563eb]'
+              : 'text-[#6b7280] hover:bg-[#f3f4f6] hover:text-[#111827]'
+          )}
+        >
+          {item.icon}
+          <span className={cn(
+            'text-[10px] leading-tight',
+            isActive && 'font-medium'
+          )}>
+            {item.shortLabel}
+          </span>
+        </Link>
+      </li>
+    )
+  }
 
   return (
     <aside className="w-16 shrink-0 bg-[#f9fafb] border-r border-[#e5e7eb] flex flex-col h-screen">
-      {/* Logo 区域 */}
+      {/* Logo */}
       <div className="h-12 flex items-center justify-center border-b border-[#e5e7eb]">
         <div className="size-7 rounded-sm bg-[#2563eb] flex items-center justify-center">
           <span className="text-white text-[12px] font-semibold">B</span>
         </div>
       </div>
 
-      {/* 导航菜单 */}
-      <nav className="flex-1 py-3 px-1.5">
-        <ul className="space-y-1">
-          {filteredNavItems.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
-            return (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className={cn(
-                    'flex flex-col items-center gap-0.5 px-1 py-2 rounded-sm text-center transition-colors',
-                    isActive
-                      ? 'bg-[#eff6ff] text-[#2563eb]'
-                      : 'text-[#6b7280] hover:bg-[#f3f4f6] hover:text-[#111827]'
-                  )}
-                >
-                  {item.icon}
-                  <span className={cn(
-                    'text-[10px] leading-tight',
-                    isActive && 'font-medium'
-                  )}>
-                    {item.shortLabel}
-                  </span>
-                </Link>
-              </li>
-            )
-          })}
-        </ul>
+      {/* Navigation */}
+      <nav className="flex-1 py-3 px-1.5 flex flex-col">
+        {/* Executor section */}
+        <div className="flex-1">
+          <p className="text-[9px] text-[#9ca3af] text-center mb-1.5 px-1">{SECTION_LABELS.executor}</p>
+          <ul className="space-y-1">
+            {executorNavItems.map(renderNavItem)}
+          </ul>
+        </div>
+
+        {/* Divider */}
+        <div className="my-3 mx-1 border-t border-[#e5e7eb]" />
+
+        {/* Assigner section */}
+        <div>
+          <p className="text-[9px] text-[#9ca3af] text-center mb-1.5 px-1">{SECTION_LABELS.assigner}</p>
+          <ul className="space-y-1">
+            {assignerNavItems.map(renderNavItem)}
+          </ul>
+        </div>
       </nav>
 
-      {/* 底部版本信息 */}
+      {/* Version */}
       <div className="py-2 border-t border-[#e5e7eb] text-center">
         <p className="text-[9px] text-[#9ca3af]">v1.0</p>
       </div>
