@@ -1,3 +1,6 @@
+'use client'
+
+import { useMemo } from 'react'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
 import { Clock, CheckCircle2, AlertTriangle, ArrowRight } from 'lucide-react'
 import {
@@ -45,7 +48,7 @@ const tasks = [
     customer: '深圳市腾飞科技有限公司', 
     serviceType: '签证服务',
     progress: { current: 2, total: 5 },
-    status: 'pending',
+    status: 'pending' as const,
     expectedDate: '2026-03-25',
   },
   { 
@@ -53,7 +56,7 @@ const tasks = [
     customer: '广州华创贸易有限公司', 
     serviceType: '公司注册',
     progress: { current: 3, total: 6 },
-    status: 'in_progress',
+    status: 'in_progress' as const,
     expectedDate: '2026-03-28',
   },
   { 
@@ -61,7 +64,7 @@ const tasks = [
     customer: '北京创新互联网科技有限公司', 
     serviceType: '许可证办理',
     progress: { current: 1, total: 4 },
-    status: 'blocked',
+    status: 'blocked' as const,
     expectedDate: '2026-03-22',
   },
   { 
@@ -69,7 +72,7 @@ const tasks = [
     customer: '上海恒达进出口有限公司', 
     serviceType: '签证服务',
     progress: { current: 4, total: 5 },
-    status: 'in_progress',
+    status: 'in_progress' as const,
     expectedDate: '2026-03-24',
   },
   { 
@@ -77,7 +80,7 @@ const tasks = [
     customer: '杭州智联网络科技有限公司', 
     serviceType: '税务登记',
     progress: { current: 0, total: 3 },
-    status: 'pending',
+    status: 'pending' as const,
     expectedDate: '2026-03-30',
   },
   { 
@@ -85,7 +88,7 @@ const tasks = [
     customer: '成都云端数据服务有限公司', 
     serviceType: '公司注册',
     progress: { current: 2, total: 8 },
-    status: 'blocked',
+    status: 'blocked' as const,
     expectedDate: '2026-03-21',
   },
 ]
@@ -95,10 +98,6 @@ const statusConfig = {
   in_progress: { label: '进行中', bg: 'bg-[#dbeafe]', text: 'text-[#1d4ed8]' },
   blocked: { label: '已卡点', bg: 'bg-[#fee2e2]', text: 'text-[#dc2626]' },
 }
-
-'use client'
-
-import { useMemo } from 'react'
 
 export default function DashboardPage() {
   // 在客户端计算当前日期以避免 hydration 不匹配
