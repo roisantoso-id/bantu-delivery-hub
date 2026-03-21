@@ -100,7 +100,6 @@ const statusConfig = {
 }
 
 export default function DashboardPage() {
-  // 在客户端计算当前日期以避免 hydration 不匹配
   const today = useMemo(() => new Date().toISOString().split('T')[0], [])
   
   return (
@@ -205,10 +204,13 @@ export default function DashboardPage() {
                       </span>
                     </TableCell>
                     <TableCell className="py-2 px-3 text-right">
-                      <button className="inline-flex items-center gap-1 h-7 px-2 text-[11px] font-medium text-white bg-[#2563eb] hover:bg-[#1d4ed8] rounded-sm transition-colors">
+                      <a 
+                        href={`/workbench/${task.id}`}
+                        className="inline-flex items-center gap-1 h-7 px-2 text-[11px] font-medium text-white bg-[#2563eb] hover:bg-[#1d4ed8] rounded-sm transition-colors"
+                      >
                         进入工作台
                         <ArrowRight className="size-3" />
-                      </button>
+                      </a>
                     </TableCell>
                   </TableRow>
                 )
