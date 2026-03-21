@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, ClipboardList, Users, GitBranch } from 'lucide-react'
+import { LayoutDashboard, ClipboardList, Users, GitBranch, Network } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface NavItem {
@@ -41,6 +41,12 @@ const assignerNavItems: NavItem[] = [
     shortLabel: '\u8C03\u5EA6',
     href: '/dispatch',
     icon: <Users className="size-4" />,
+  },
+  {
+    label: 'Multi-Service',
+    shortLabel: '\u6307\u6D3E',
+    href: '/dispatch/OPP-240321-001',
+    icon: <Network className="size-4" />,
   },
 ]
 
