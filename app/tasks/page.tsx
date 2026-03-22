@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
+import { useAuth } from '@/lib/auth-context'
 import {
   Table,
   TableBody,
@@ -118,6 +119,7 @@ const statusConfig = {
 }
 
 export default function TasksPage() {
+  const user = useAuth()
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -143,7 +145,7 @@ export default function TasksPage() {
 
 
   return (
-    <DashboardLayout title="我的办件" userName="张三" isSupervisor={false}>
+    <DashboardLayout title="我的办件" userName={user?.name} isSupervisor={false}>
       <div className="flex flex-col gap-4">
         {/* 顶部统计卡片 */}
         <div className="grid grid-cols-3 gap-3">

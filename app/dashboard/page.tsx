@@ -2,7 +2,8 @@
 
 import { useMemo } from 'react'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
-import { Clock, CheckCircle2, AlertTriangle, ArrowRight } from 'lucide-react'
+import { useAuth } from '@/lib/auth-context'
+import { Clock, CheckCircle2, AlertTriangle, ArrowRight, UserCircle } from 'lucide-react'
 import {
   Table,
   TableBody,
@@ -100,15 +101,42 @@ const statusConfig = {
 }
 
 export default function DashboardPage() {
+  const user = useAuth()
   const today = useMemo(() => new Date().toISOString().split('T')[0], [])
-  
+
   return (
-    <DashboardLayout 
-      title="大盘概览" 
-      userName="张三"
+    <DashboardLayout
+      title="大盘概览"
+      userName={user?.name}
       isSupervisor={true}
     >
       <div className="space-y-4">
+        {/* 用户信息卡片 */}
+        {user && (
+          <div className="bg-white border border-[#e5e7eb] rounded-sm p-4 flex items-center gap-4">
+            <div className="size-10 rounded-full bg-[#eff6ff] flex items-center justify-center">
+              <UserCircle className="size-5 text-[#2563eb]" />
+            </div>
+            <div className="flex-1">
+              <p className="text-[14px] font-medium text-[#111827]">
+                你好，{user.name}
+              </p>
+              <p className="text-[12px] text-[#6b7280] mt-0.5">
+                {user.email}
+                <span className="mx-1.5">·</span>
+                {user.roleCodes.map((code) => (
+                  <span
+                    key={code}
+                    className="inline-flex text-[10px] px-1.5 py-0.5 rounded-sm bg-[#eff6ff] text-[#2563eb] mr-1"
+                  >
+                    {code}
+                  </span>
+                ))}
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* 顶部统计卡片 - 3列 */}
         <div className="grid grid-cols-3 gap-3">
           {stats.map((stat) => (

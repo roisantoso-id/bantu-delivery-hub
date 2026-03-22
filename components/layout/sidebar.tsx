@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { LayoutDashboard, ClipboardList, Users, GitBranch, Network } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -87,9 +88,13 @@ export function Sidebar() {
     <aside className="w-16 shrink-0 bg-[#f9fafb] border-r border-[#e5e7eb] flex flex-col h-screen">
       {/* Logo */}
       <div className="h-12 flex items-center justify-center border-b border-[#e5e7eb]">
-        <div className="size-7 rounded-sm bg-[#2563eb] flex items-center justify-center">
-          <span className="text-white text-[12px] font-semibold">B</span>
-        </div>
+        <Image
+          src="/bantu_logo_yuan.png"
+          alt="Bantu Logo"
+          width={32}
+          height={32}
+          className="rounded-full"
+        />
       </div>
 
       {/* Navigation */}

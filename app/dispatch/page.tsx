@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
+import { useAuth } from '@/lib/auth-context'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import { BarChart, Bar, XAxis, YAxis, LineChart, Line } from 'recharts'
@@ -136,6 +137,7 @@ function QuickAssignDropdown({
 }
 
 export default function DispatchPage() {
+  const user = useAuth()
   const [hoveredOpp, setHoveredOpp] = useState<string | null>(null)
 
   const handleAssign = (oppId: string, memberId: number) => {
@@ -146,7 +148,7 @@ export default function DispatchPage() {
   const avgTime = timeData[timeData.length - 1].days
 
   return (
-    <DashboardLayout title={'\u8D44\u6E90\u8C03\u5EA6'} userName={'\u5F20\u4E09'} isSupervisor={true}>
+    <DashboardLayout title={'资源调度'} userName={user?.name} isSupervisor={true}>
       <div className="flex flex-col h-full gap-3">
         {/* Top stats row - 4 cards */}
         <div className="grid grid-cols-4 gap-2 flex-shrink-0">

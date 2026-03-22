@@ -1,0 +1,21 @@
+services:
+  delivery-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: delivery-app
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: "1"
+    expose:
+      - "3000"
+    restart: unless-stopped
+    networks:
+      - bantuqifu-network
+
+networks:
+  bantuqifu-network:
+    external: true
+    name: bantuqifu-sales-hub_bantuqifu-network
