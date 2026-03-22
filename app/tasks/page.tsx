@@ -145,7 +145,7 @@ export default function TasksPage() {
 
 
   return (
-    <DashboardLayout title="我的办件" userName={user?.name} isSupervisor={false}>
+    <DashboardLayout title="我的办件" userName={user?.name}>
       <div className="flex flex-col gap-4">
         {/* 顶部统计卡片 */}
         <div className="grid grid-cols-3 gap-3">

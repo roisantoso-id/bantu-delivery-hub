@@ -25,7 +25,8 @@ export async function getAuthUser(): Promise<AuthUser | null> {
       id: dbUser.id,
       email: dbUser.email,
       name: dbUser.name,
-      roleCodes: dbUser.user_organizations.map((uo) => uo.roles.code),
+      roleCodes: [...new Set(dbUser.user_organizations.map((uo) => uo.roles.code))],
+      organizationId: dbUser.user_organizations[0]?.organizationId ?? '',
     }
   } catch {
     return null

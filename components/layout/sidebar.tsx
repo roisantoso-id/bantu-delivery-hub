@@ -3,8 +3,9 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, ClipboardList, Users, GitBranch, Network } from 'lucide-react'
+import { LayoutDashboard, ClipboardList, Users, GitBranch, Target } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useAuth } from '@/lib/auth-context'
 
 interface NavItem {
   label: string
@@ -13,51 +14,54 @@ interface NavItem {
   icon: React.ReactNode
 }
 
-// Executor menu
-const executorNavItems: NavItem[] = [
+interface NavSection {
+  key: string
+  label: string
+  visibleTo: string[] // empty = all roles
+  items: NavItem[]
+}
+
+const navSections: NavSection[] = [
   {
-    label: 'Dashboard',
-    shortLabel: '\u6982\u89C8',
-    href: '/dashboard',
-    icon: <LayoutDashboard className="size-4" />,
+    key: 'common',
+    label: '通用',
+    visibleTo: [],
+    items: [
+      { label: 'Dashboard', shortLabel: '概览', href: '/dashboard', icon: <LayoutDashboard className="size-4" /> },
+    ],
   },
   {
-    label: 'My Tasks',
-    shortLabel: '\u5DE5\u4F5C\u53F0',
-    href: '/tasks',
-    icon: <ClipboardList className="size-4" />,
+    key: 'pm',
+    label: '项目',
+    visibleTo: ['pm', 'admin'],
+    items: [
+      { label: 'Opportunities', shortLabel: '商机', href: '/opportunities', icon: <Target className="size-4" /> },
+      { label: 'Dispatch', shortLabel: '调度', href: '/dispatch', icon: <Users className="size-4" /> },
+    ],
   },
   {
-    label: 'Collab Workbench',
-    shortLabel: '\u534F\u540C',
-    href: '/workbench/collab/demo',
-    icon: <GitBranch className="size-4" />,
+    key: 'executor',
+    label: '执行',
+    visibleTo: ['executor', 'admin'],
+    items: [
+      { label: 'My Tasks', shortLabel: '工作台', href: '/tasks', icon: <ClipboardList className="size-4" /> },
+      { label: 'Collab Workbench', shortLabel: '协同', href: '/workbench/collab/demo', icon: <GitBranch className="size-4" /> },
+    ],
   },
 ]
 
-// Assigner menu
-const assignerNavItems: NavItem[] = [
-  {
-    label: 'Dispatch',
-    shortLabel: '\u8C03\u5EA6',
-    href: '/dispatch',
-    icon: <Users className="size-4" />,
-  },
-  {
-    label: 'Multi-Service',
-    shortLabel: '\u6307\u6D3E',
-    href: '/dispatch/OPP-240321-001',
-    icon: <Network className="size-4" />,
-  },
-]
-
-const SECTION_LABELS = {
-  executor: '\u6267\u884C',
-  assigner: '\u5206\u914D',
+function getVisibleSections(roleCodes: string[]): NavSection[] {
+  return navSections.filter((section) => {
+    if (section.visibleTo.length === 0) return true
+    return section.visibleTo.some((role) => roleCodes.includes(role))
+  })
 }
 
 export function Sidebar() {
   const pathname = usePathname()
+  const user = useAuth()
+  const roleCodes = user?.roleCodes ?? []
+  const visibleSections = getVisibleSections(roleCodes)
 
   const renderNavItem = (item: NavItem) => {
     const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
@@ -99,24 +103,15 @@ export function Sidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 py-3 px-1.5 flex flex-col">
-        {/* Executor section */}
-        <div className="flex-1">
-          <p className="text-[9px] text-[#9ca3af] text-center mb-1.5 px-1">{SECTION_LABELS.executor}</p>
-          <ul className="space-y-1">
-            {executorNavItems.map(renderNavItem)}
-          </ul>
-        </div>
-
-        {/* Divider */}
-        <div className="my-3 mx-1 border-t border-[#e5e7eb]" />
-
-        {/* Assigner section */}
-        <div>
-          <p className="text-[9px] text-[#9ca3af] text-center mb-1.5 px-1">{SECTION_LABELS.assigner}</p>
-          <ul className="space-y-1">
-            {assignerNavItems.map(renderNavItem)}
-          </ul>
-        </div>
+        {visibleSections.map((section, idx) => (
+          <div key={section.key} className={idx === 0 ? 'flex-1' : ''}>
+            {idx > 0 && <div className="my-3 mx-1 border-t border-[#e5e7eb]" />}
+            <p className="text-[9px] text-[#9ca3af] text-center mb-1.5 px-1">{section.label}</p>
+            <ul className="space-y-1">
+              {section.items.map(renderNavItem)}
+            </ul>
+          </div>
+        ))}
       </nav>
 
       {/* Version */}

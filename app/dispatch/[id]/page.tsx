@@ -287,7 +287,7 @@ export default function MultiServiceAssignmentPage() {
 
   if (!mounted) {
     return (
-      <DashboardLayout title={L.title} userName={user?.name} isSupervisor={true}>
+      <DashboardLayout title={L.title} userName={user?.name}>
         <div className="flex items-center justify-center h-full">
           <Loader2 className="w-5 h-5 animate-spin text-[#6b7280]" />
         </div>
@@ -298,7 +298,7 @@ export default function MultiServiceAssignmentPage() {
   const pendingCount = services.filter(s => s.status === 'pending').length
 
   return (
-    <DashboardLayout title={L.title} userName={user?.name} isSupervisor={true}>
+    <DashboardLayout title={L.title} userName={user?.name}>
       <div className="flex flex-col h-full gap-3">
         {/* Header */}
         <div className="flex items-center justify-between px-3 py-2 bg-white border border-[#e5e7eb] rounded-sm">

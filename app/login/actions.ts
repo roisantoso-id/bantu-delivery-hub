@@ -31,13 +31,14 @@ export async function login(formData: FormData) {
     return { error: '账户未激活或不存在' }
   }
 
+  const allowedRoles = ['executor', 'admin', 'pm']
   const hasAllowedRole = dbUser.user_organizations.some(
-    (uo) => uo.roles.code.includes('executor') || uo.roles.code === 'admin'
+    (uo) => allowedRoles.includes(uo.roles.code)
   )
 
   if (!hasAllowedRole) {
     await supabase.auth.signOut()
-    return { error: '您没有执行端访问权限，请联系管理员' }
+    return { error: '您没有访问权限，请联系管理员' }
   }
 
   redirect('/dashboard')

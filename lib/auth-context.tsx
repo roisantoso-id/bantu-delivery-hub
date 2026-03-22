@@ -7,6 +7,7 @@ export interface AuthUser {
   email: string
   name: string
   roleCodes: string[]
+  organizationId: string
 }
 
 const AuthContext = createContext<AuthUser | null>(null)
