@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
-import { Clock, CheckCircle2, AlertTriangle, ArrowRight } from 'lucide-react'
+import { Clock, CheckCircle2, AlertTriangle, ArrowRight, TrendingUp, TrendingDown } from 'lucide-react'
 import {
   Table,
   TableBody,
@@ -38,6 +38,22 @@ const stats = [
     bgColor: 'bg-[#fef2f2]',
     iconColor: 'text-[#dc2626]',
     highlight: true,
+  },
+  {
+    label: 'Schedule Performance Index',
+    value: '1.05',
+    unit: 'ahead',
+    icon: TrendingUp,
+    bgColor: 'bg-[#f0fdf4]',
+    iconColor: 'text-[#16a34a]',
+  },
+  {
+    label: 'Cost Performance Index',
+    value: '0.85',
+    unit: 'over',
+    icon: TrendingDown,
+    bgColor: 'bg-[#fef2f2]',
+    iconColor: 'text-[#dc2626]',
   },
 ]
 
@@ -110,7 +126,7 @@ export default function DashboardPage() {
     >
       <div className="space-y-4">
         {/* 顶部统计卡片 - 3列 */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-5 gap-3">
           {stats.map((stat) => (
             <div
               key={stat.label}

@@ -18,7 +18,9 @@ import {
   Circle,
   Upload,
   Send,
-  Paperclip
+  Paperclip,
+  Timer,
+  AlertCircle
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -28,6 +30,8 @@ export default function WorkbenchDetailPage() {
   const [deliveryNote, setDeliveryNote] = useState('客户配合度高，材料齐全')
   const [newMessage, setNewMessage] = useState('')
   const [checkedMaterials, setCheckedMaterials] = useState<number[]>([1, 2, 4])
+  const [loggedTime, setLoggedTime] = useState<{[key: number]: number}>({})
+  const [showTimeLog, setShowTimeLog] = useState<number | null>(null)
 
   useEffect(() => {
     setMounted(true)
@@ -37,6 +41,14 @@ export default function WorkbenchDetailPage() {
     setCheckedMaterials(prev => 
       prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
     )
+  }
+
+  const logTaskTime = (taskId: number, hours: number) => {
+    setLoggedTime(prev => ({
+      ...prev,
+      [taskId]: (prev[taskId] || 0) + hours
+    }))
+    setShowTimeLog(null)
   }
 
   // Mock data
